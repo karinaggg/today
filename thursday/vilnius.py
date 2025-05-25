@@ -23,20 +23,30 @@ client = OpenAI(
     base_url=endpoint,
     api_key=token,
 )
+def greet():
+    print("Programa veikia. Klausk apie 'vilnius.txt' lietuviškai (norėdami išeiti, rašykite exit)\n")
 
-print("Programa veikia. Klausk apie 'vilnius.txt' lietuviškai (Ctrl+C nutraukti)\n")
+greet()
 
 while True:
-    user_input = input("Klausimas:")
+    user_input = input("Klausimas: ")
+    if user_input.lower() == "exit":
+        print("Bye")
+        break
 
-    response = client.chat.completions.create(
-        messages=[
-            {"role": "system", "content": "Tu esi naudingas padėjėjas, atsakinėk lietuviškai."},
-            {"role": "user", "content": f"Štai dokumento turinys:\n{context}\n\nKlausimas: {user_input}"},
-        ],
-        temperature=1.1,
-        top_p=1.0,
-        model=model
-    )
+    try:
 
-    print("Atsakymas:", response.choices[0].message.content)
+        response = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": "Tu esi naudingas padėjėjas, atsakinėk lietuviškai."},
+                {"role": "user", "content": f"Štai dokumento turinys:\n{context}\n\nKlausimas: {user_input}"},
+            ],
+            temperature=1.1,
+            top_p=1.0,
+            model=model
+        )
+
+        print("Atsakymas:", response.choices[0].message.content)
+
+    except Exception as e:
+        print("Error:", e)
